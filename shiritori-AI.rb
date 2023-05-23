@@ -5,7 +5,7 @@
 
 require "openai"
 
-access_token = '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'
+access_token = ENV['OPENAI_API_KEY']
 
 class Conversation < Array
   def initialize
