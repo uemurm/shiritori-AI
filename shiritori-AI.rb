@@ -1,8 +1,5 @@
 #! /usr/bin/ruby
 
-# お金が足りないので、モックを作りましょう。
-# 「ん」で終わる単語を連続で返されると、「ん」で始まる別の単語で答えて下さい。と出力してしまう。
-
 require "openai"
 
 access_token = ENV['OPENAI_API_KEY']
