@@ -1,12 +1,23 @@
 #! /usr/bin/ruby
 
 require "openai"
+require 'optparse'
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: example.rb [options]"
+
+  opts.on("-d", "--[no-]debug", "Run in Debug mode") do |v|
+    options[:debug] = v
+  end
+end.parse!
 
 access_token = ENV['OPENAI_API_KEY']
 
 class Conversation < Array
   def initialize
     @initial_word = 'しりとり'
+    # todo: Create a file 'system_prompt.txt'
     @system_prompt = <<-EOS
 私は日本語を勉強しています。
 あなたには、しりとりの相手役をお願いします。
@@ -101,9 +112,11 @@ conversation = Conversation.new
 
 File.open('gpt.log', "w") do |f|
   while true do
-    # depth = 3
-    # p conversation.slice(conversation.size - depth, depth)
-  
+    if options[:debug]
+      depth = 3
+      p conversation.slice(conversation.size - depth, depth)
+    end
+
     while (response = client.chat(parameters: { model: "gpt-3.5-turbo", messages: conversation.messages, });
         response.dig('error', 'type') == 'server_error'
         ) do
@@ -113,14 +126,10 @@ File.open('gpt.log', "w") do |f|
     f.print "\n\n"
 
     word = response.dig("choices", 0, "message", "content")
-    # print word + "\t"
-  
-    # word = GPTresponse::sanitise(word) # Now role alternates between 'user' and 'assistant' so seems unnecessary.
     puts word
 
     conversation.add(word)
 
     sleep 21
-    # puts
   end
 end
