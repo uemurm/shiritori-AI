@@ -7,11 +7,11 @@ options = {}
 OptionParser.new do |opts|
   opts.banner = "Usage: shiritori-AI.rb [options]"
 
-  opts.on("-d", "--[no-]debug", "Run in Debug mode") do |v|
-    options[:debug] = v
-  end
+  opts.on('-d', '--[no-]debug', 'Run in Debug mode')  { |v| options[:debug] = v }
+  opts.on('-l', '--local',      'Not access ChatGPT') { |v| options[:local] = v }
 end.parse!
 
+# todo: Create a file 'open-ai.key' then read it instead.
 access_token = ENV['OPENAI_API_KEY']
 
 class Conversation < Array
@@ -108,6 +108,7 @@ end
 
 client = OpenAI::Client.new(access_token: access_token)
 conversation = Conversation.new
+local_words = open('local_words.txt').to_a.map { |word| word.sub(/\s+/, '') }
 
 File.open('gpt.log', "w") do |f|
   while true do
@@ -116,19 +117,25 @@ File.open('gpt.log', "w") do |f|
       p conversation.slice(conversation.size - depth, depth)
     end
 
-    while (response = client.chat(parameters: { model: "gpt-3.5-turbo", messages: conversation.messages, });
+    unless options[:local]
+      while (response = client.chat(parameters: { model: "gpt-3.5-turbo", messages: conversation.messages, });
         response.dig('error', 'type') == 'server_error'
         ) do
           sleep 20
+      end
     end
     f.print conversation.pretty_inspect
     f.print "\n\n"
 
-    word = response.dig("choices", 0, "message", "content")
+    if options[:local]
+      word = local_words.shift
+    else
+      word = response.dig('choices', 0, 'message', 'content')
+    end
     puts word
 
     conversation.add(word)
 
-    sleep 21
+    sleep 21 unless options[:local]
   end
 end
