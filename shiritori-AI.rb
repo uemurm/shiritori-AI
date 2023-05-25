@@ -11,8 +11,7 @@ OptionParser.new do |opts|
   opts.on('-l', '--local',      'Not access ChatGPT') { |v| options[:local] = v }
 end.parse!
 
-# todo: Create a file 'open-ai.key' then read it instead.
-access_token = ENV['OPENAI_API_KEY']
+access_token = open('open-ai.key').read.to_s
 
 class Conversation < Array
   def initialize
