@@ -17,19 +17,10 @@ access_token = ENV['OPENAI_API_KEY']
 class Conversation < Array
   def initialize
     @initial_word = 'しりとり'
-    # todo: Create a file 'system_prompt.txt'
-    @system_prompt = <<-EOS
-私は日本語を勉強しています。
-あなたには、しりとりの相手役をお願いします。
-しりとりの答えだけを、単語ひとつで答えて下さい。
-ひらがなだけで答えて下さい。
-一般名詞で答えて下さい。
-「ん」以外で終わる単語で答えて下さい。
-「ん」で終わる単語は使わないで下さい。
-    EOS
+    @first_system_prompt = open('first_system_prompt.txt').read.gsub(/\s+/, '')
 
-    self << { role: 'system', content: @system_prompt.gsub(/\n/, ''), valid?: true }
-    self << { role: 'user', content: @initial_word, valid?: true }
+    self << { role: 'system', content: @first_system_prompt.gsub(/\n/, ''), valid?: true }
+    self << { role: 'user',   content: @initial_word,                       valid?: true }
   end
 
   def messages
@@ -48,8 +39,6 @@ class Conversation < Array
 
       add_invalid(word)
       add_system_prompt(prompt)
-      # puts 'You lose!'
-      # break
     elsif word.includes_other_than_kana?
       prompt = 'かな文字以外が使われています。ひらがな又はカタカナだけで答えて下さい。'
       puts 'SYSTEM: ' + prompt

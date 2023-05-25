@@ -5,6 +5,7 @@
 会社をお休みしてしまったが、こちらを書き進めてみた。
 - お金が足りないので、モックを作りましょう。
     => require 'optparse' しつつ、ローカルファイルから仮の返答を読み込むようにした。
+- todo: Create a file 'system_prompt.txt' => Done
 
 # 2023-05-23 Tue
 Did `git init`, finally..
