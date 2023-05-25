@@ -5,7 +5,7 @@ require 'optparse'
 
 options = {}
 OptionParser.new do |opts|
-  opts.banner = "Usage: example.rb [options]"
+  opts.banner = "Usage: shiritori-AI.rb [options]"
 
   opts.on("-d", "--[no-]debug", "Run in Debug mode") do |v|
     options[:debug] = v
@@ -38,7 +38,7 @@ class Conversation < Array
 
   def add(word)
     if word.match(/「/)
-      word = GPTresponse::sanitise(word)
+      word = GPTResponse::sanitise(word)
     end
 
     if word.ends_with_nn?
@@ -100,10 +100,9 @@ class String
   end
 end
 
-class GPTresponse
+class GPTResponse
   def self.sanitise(string)
     ret = string.sub(/.*「/, '').sub(/」.*/, '')
-    # /\p{Hiragana}+/.match(ret).to_s # ひらがな部分だけを取り出す。
   end
 end
 
