@@ -19,7 +19,7 @@ class Conversation < Array
     @initial_word = 'しりとり'
     @first_system_prompt = open('first_system_prompt.txt').read.gsub(/\s+/, '')
 
-    self << { role: 'system', content: @first_system_prompt.gsub(/\n/, ''), valid?: true }
+    self << { role: 'system', content: @first_system_prompt.gsub(/\n/, ''), valid?: nil  }
     self << { role: 'user',   content: @initial_word,                       valid?: true }
   end
 
@@ -33,8 +33,8 @@ class Conversation < Array
     end
 
     if word.ends_with_nn?
-      previous_word = select { |message| message[:role] != 'system' }.last[:content]
-      prompt = '単語が「ん」で終わっています。「' + previous_word.split(//).last + '」で始まる別の単語で答えて下さい。'
+      last_valid_word = select { |message| message[:valid?] }.last[:content]
+      prompt = '単語が「ん」で終わっています。「' + last_valid_word.split(//).last + '」で始まる別の単語で答えて下さい。'
       puts 'SYSTEM: ' + prompt
 
       add_invalid(word)
@@ -62,7 +62,7 @@ class Conversation < Array
   end
 
   def add_system_prompt(prompt)
-    self << { role: 'system', content: prompt, valid?: true }
+    self << { role: 'system', content: prompt, valid?: nil }
   end
 
   def swap_user_assistant_roles_if_valid
