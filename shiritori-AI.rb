@@ -97,33 +97,32 @@ end
 client = OpenAI::Client.new(access_token: access_token)
 conversation = Conversation.new
 local_words = open('local_words.txt').to_a.map { |word| word.sub(/\s+/, '') }
+log = open('shiritori-AI.log', 'w')
 
-File.open('gpt.log', "w") do |f|
-  while true do
-    if options[:debug]
-      depth = 3
-      p conversation.slice(conversation.size - depth, depth)
-    end
-
-    unless options[:local]
-      while (response = client.chat(parameters: { model: "gpt-3.5-turbo", messages: conversation.messages, });
-        response.dig('error', 'type') == 'server_error'
-        ) do
-          sleep 20
-      end
-    end
-    f.print conversation.pretty_inspect
-    f.print "\n\n"
-
-    if options[:local]
-      word = local_words.shift
-    else
-      word = response.dig('choices', 0, 'message', 'content')
-    end
-    puts word
-
-    conversation.add(word)
-
-    sleep 21 unless options[:local]
+while true do
+  if options[:debug]
+    depth = 3
+    p conversation.slice(conversation.size - depth, depth)
   end
+
+  unless options[:local]
+    while (response = client.chat(parameters: { model: "gpt-3.5-turbo", messages: conversation.messages, });
+      response.dig('error', 'type') == 'server_error'
+      ) do
+        sleep 20
+    end
+  end
+  log.print conversation.pretty_inspect
+  log.print "\n\n"
+
+  if options[:local]
+    word = local_words.shift
+  else
+    word = response.dig('choices', 0, 'message', 'content')
+  end
+  puts word
+
+  conversation.add(word)
+
+  sleep 21 unless options[:local]
 end
