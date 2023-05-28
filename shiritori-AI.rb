@@ -106,10 +106,10 @@ while true do
   end
 
   unless options[:local]
-    while (response = client.chat(parameters: { model: "gpt-3.5-turbo", messages: conversation.messages, });
-      response.dig('error', 'type') == 'server_error'
-      ) do
-        sleep 20
+    response = client.chat(parameters: { model: "gpt-3.5-turbo", messages: conversation.messages, })
+    if response.dig('error', 'type') == 'server_error'
+      sleep 20
+      redo
     end
   end
   log.print conversation.pretty_inspect
