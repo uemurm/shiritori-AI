@@ -116,6 +116,9 @@ while true do
     if response.dig('error', 'type') == 'server_error'
       sleep 20
       redo
+    elsif response.dig('error')
+      print 'Error: '
+      puts response.dig('error', 'message')
     end
   end
   log.print conversation.pretty_inspect
