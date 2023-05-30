@@ -1,5 +1,8 @@
 - Cannot `git push` on VS Code. Need to do that on WSL, instead.
 
+# 2023-05-30 Tue
+ssh-agent に秘密鍵を登録して、`config.fish`で自動的に起動させた。
+
 # 2023-05-28 Sun
 @Itamar, @Daniel のアドバイスを反映させた。
 
