@@ -7,8 +7,8 @@ options = {}
 OptionParser.new do |opts|
   opts.banner = "Usage: shiritori-AI.rb [options]"
 
-  opts.on('-d', '--[no-]debug', 'Run in Debug mode')  { |v| options[:debug] = v }
-  opts.on('-l', '--local',      'Not access ChatGPT') { |v| options[:local] = v }
+  opts.on('-d', '--[no-]debug', 'Run in Debug mode' ) { |v| options[:debug] = v }
+  opts.on('-l', '--local'     , 'Not access ChatGPT') { |v| options[:local] = v }
 end.parse!
 
 access_token = open('open-ai.key').read.to_s
@@ -31,8 +31,8 @@ class Conversation < Array
       word = GPTResponse::sanitise(word)
     end
 
+    last_valid_word = select { |message| message[:valid?] }.last[:content]
     if word.ends_with_nn?
-      last_valid_word = select { |message| message[:valid?] }.last[:content]
       prompt = '単語が「ん」で終わっています。「' + last_valid_word.split(//).last + '」で始まる別の単語で答えて下さい。'
       puts 'SYSTEM: ' + prompt
 
@@ -40,6 +40,12 @@ class Conversation < Array
       add_system_prompt(prompt)
     elsif word.includes_other_than_kana?
       prompt = 'かな文字以外が使われています。ひらがな又はカタカナだけで答えて下さい。'
+      puts 'SYSTEM: ' + prompt
+
+      add_invalid(word)
+      add_system_prompt(prompt)
+    elsif last_valid_word.split(//).last != word.split(//).first
+      prompt = '前の単語と繋がっていません。「' + last_valid_word.split(//).last + '」で始まる別の単語で答えて下さい。'
       puts 'SYSTEM: ' + prompt
 
       add_invalid(word)

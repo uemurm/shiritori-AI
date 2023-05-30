@@ -1,5 +1,8 @@
 - Cannot `git push` on VS Code. Need to do that on WSL, instead.
 
+# 2023-05-28 Sun
+@Itamar, @Daniel のアドバイスを反映させた。
+
 # 2023-05-25 Thu
 会社をお休みしてしまったが、こちらを書き進めてみた。
 - お金が足りないので、モックを作りましょう。
