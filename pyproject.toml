@@ -9,6 +9,8 @@ package-mode = false
 [tool.poetry.dependencies]
 python = "^3.9"
 google-generativeai = "^0.8.3"
+black = "^24.10.0"
+ruff = "^0.6.9"
 
 
 [build-system]
