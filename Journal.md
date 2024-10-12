@@ -2,6 +2,9 @@
 
 # 2024-10-12 Sat
 Open-AI が無料では使えないので、Python で書いて Google Gemini にアクセスすることにした。
+`poetry install` で生成されるファイル `poetry.lock` を何故コミットするのか疑問だったが、
+https://stackoverflow.com/questions/39990017/should-i-commit-the-yarn-lock-file-and-what-is-it-for
+によると依存関係を non-deterministically にインストールするかららしい…
 
 # 2023-05-30 Tue
 ssh-agent に秘密鍵を登録して、`config.fish`で自動的に起動させた。
