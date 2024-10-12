@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "shiritori-ai"
+version = "0.1.0"
+description = "Have ai do Shiritori."
+authors = ["Mitsu Uemura <mitsuhide.uemura@gmail.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.9"
+google-generativeai = "^0.8.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,5 +1,8 @@
 - Cannot `git push` on VS Code. Need to do that on WSL, instead.
 
+# 2024-10-12 Sat
+Open-AI が無料では使えないので、Python で書いて Google Gemini にアクセスすることにした。
+
 # 2023-05-30 Tue
 ssh-agent に秘密鍵を登録して、`config.fish`で自動的に起動させた。
 
