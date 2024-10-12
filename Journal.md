@@ -6,6 +6,8 @@ Open-AI が無料では使えないので、Python で書いて Google Gemini �
 https://stackoverflow.com/questions/39990017/should-i-commit-the-yarn-lock-file-and-what-is-it-for
 によると依存関係を non-deterministically にインストールするかららしい…
 
+Python-3.9 をインストールしたのだが、正しいバージョンのライブラリを import 出来ず、結局 `pyenv`/`poetry` を導入した。
+
 # 2023-05-30 Tue
 ssh-agent に秘密鍵を登録して、`config.fish`で自動的に起動させた。
 
