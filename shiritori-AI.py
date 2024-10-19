@@ -9,7 +9,7 @@ genai.configure(api_key=api_key)
 mecab = MeCab.Tagger()
 
 
-class Shiritori(List):
+class Shiritori(list):
     def __init__(self, initial_word):
         self.initial_word = initial_word
 
