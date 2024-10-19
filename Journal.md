@@ -1,4 +1,5 @@
-- Cannot `git push` on VS Code. Need to do that on WSL, instead.
+# 2024-10-19 Sat
+試用期間内で切られたので、時間が出来てしまった。
 
 # 2024-10-12 Sat
 Open-AI が無料では使えないので、Python で書いて Google Gemini にアクセスすることにした。
