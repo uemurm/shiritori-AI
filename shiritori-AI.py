@@ -40,8 +40,8 @@ class Shiritori(dict):
         return False
 
 
-instruction = """私は日本語を勉強しています。あなたには、しりとりの相手役をお願いします。しりとりの答えだけを、
-単語ひとつで答えて下さい。ひらがなもしくはカタカナだけで答えて下さい。二文字以上の一般名詞で答えて下さい。"""
+instruction = """あなたには、しりとりの相手役をお願いします。しりとりの答えだけを、単語ひとつで答えて下さい。
+ひらがなもしくはカタカナだけで答えて下さい。二文字以上の一般名詞で答えて下さい。"""
 word = "しりとり"
 prompt = instruction + word
 
@@ -58,6 +58,6 @@ while True:
     try:
         shiritori.add(word)
     except NotNounException:
-        prompt = "一般名詞で答えて下さい。"
+        prompt = "答えが一般名詞ではありません。"
     else:
         prompt = instruction + word
