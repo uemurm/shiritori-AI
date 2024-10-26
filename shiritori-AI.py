@@ -20,7 +20,7 @@ class Shiritori(dict):
     def _is_noun(self, w):
         node = mecab.parseToNode(w)
         while node:
-            if node.feature.split(",")[0] == "名詞i":
+            if node.feature.split(",")[0] == "名詞":
                 return True
             node = node.next
         return False
