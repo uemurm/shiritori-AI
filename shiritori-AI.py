@@ -1,5 +1,10 @@
 import google.generativeai as genai
 import MeCab
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-d", "--debug", help="print debug output", action="store_true")
+args = parser.parse_args()
 
 with open("./Google-AI.key") as key_file:
     api_key = key_file.read().rstrip()
@@ -15,7 +20,8 @@ class Shiritori(dict):
     def add(self, w):
         if self._is_noun(w):
             self[w] = ""
-        print(self)
+        if args.debug:
+            print(f"DEBUG: {self=}")
 
     def _is_noun(self, w):
         node = mecab.parseToNode(w)
@@ -35,10 +41,10 @@ shiritori = Shiritori(word)
 
 while True:
     prompt = instruction + word
-    print(prompt)
+    if args.debug:
+        print(f"DEBUG: {prompt=}")
     response = model.generate_content(prompt)
-    print("===")
     word = response.text.rstrip()
-    print("'" + word + "'")
+    if args.debug:
+        print(f"DEBUG: {word=}")
     shiritori.add(word)
-    print("===")
