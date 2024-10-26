@@ -13,6 +13,11 @@ genai.configure(api_key=api_key)
 mecab = MeCab.Tagger()
 
 
+class NotNounException(Exception):
+    def __str__(self):
+        return "not a noun"
+
+
 class Shiritori(dict):
     def __init__(self, initial_word):
         self[initial_word] = ""
@@ -20,6 +25,9 @@ class Shiritori(dict):
     def add(self, w):
         if self._is_noun(w):
             self[w] = ""
+        else:
+            raise NotNounException()
+
         if args.debug:
             print(f"DEBUG: {self=}")
 
@@ -33,18 +41,23 @@ class Shiritori(dict):
 
 
 instruction = """私は日本語を勉強しています。あなたには、しりとりの相手役をお願いします。しりとりの答えだけを、
-単語ひとつで答えて下さい。ひらがなだけで答えて下さい。一般名詞で答えて下さい。"""
+単語ひとつで答えて下さい。ひらがなもしくはカタカナだけで答えて下さい。二文字以上の一般名詞で答えて下さい。"""
 word = "しりとり"
+prompt = instruction + word
 
 model = genai.GenerativeModel("gemini-1.5-flash")
 shiritori = Shiritori(word)
 
 while True:
-    prompt = instruction + word
     if args.debug:
         print(f"DEBUG: {prompt=}")
     response = model.generate_content(prompt)
     word = response.text.rstrip()
     if args.debug:
         print(f"DEBUG: {word=}")
-    shiritori.add(word)
+    try:
+        shiritori.add(word)
+    except NotNounException:
+        prompt = "一般名詞で答えて下さい。"
+    else:
+        prompt = instruction + word
