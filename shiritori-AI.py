@@ -23,13 +23,13 @@ class LessThanTwoLettersException(Exception):
         return "The word consists of less than two letters"
 
 
-class Shiritori(dict):
+class Shiritori(list):
     def __init__(self, initial_word):
-        self[initial_word] = ""
+        self.add(initial_word)
 
     def add(self, w):
         if self._is_legit(w):
-            self[w] = ""
+            self.append(w)
 
         if args.debug:
             print(f"DEBUG: {self=}")
@@ -59,7 +59,7 @@ model = genai.GenerativeModel("gemini-1.5-flash")
 shiritori = Shiritori(word)
 
 while True:
-    print(list(shiritori.keys()))
+    print(shiritori)
     response = model.generate_content(prompt)
     word = response.text.rstrip()
     if args.debug:
