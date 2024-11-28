@@ -59,8 +59,7 @@ model = genai.GenerativeModel("gemini-1.5-flash")
 shiritori = Shiritori(word)
 
 while True:
-    if args.debug:
-        print(f"DEBUG: {prompt=}")
+    print(list(shiritori.keys()))
     response = model.generate_content(prompt)
     word = response.text.rstrip()
     if args.debug:
