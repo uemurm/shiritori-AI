@@ -23,6 +23,11 @@ class LessThanTwoLettersException(Exception):
         return "The word consists of less than two letters"
 
 
+class UnconnectedException(Exception):
+    def __str__(self):
+        return "Head of the word doesn't match with the tail of the previous word"
+
+
 class Shiritori(list):
     def __init__(self, initial_word):
         self.add(initial_word)
@@ -39,6 +44,8 @@ class Shiritori(list):
             raise LessThanTwoLettersException()
         if not self._is_noun(w):
             raise NotNounException()
+        if not self._is_connected(w):
+            raise
         return True
 
     def _is_noun(self, w):
@@ -49,6 +56,10 @@ class Shiritori(list):
             node = node.next
         return False
 
+    def _is_connected(self, w):
+        if len(self) <= 1:
+            return True
+        return self[-1] == w[0]
 
 instruction = """あなたには、しりとりの相手役をお願いします。しりとりの答えだけを、単語ひとつで答えて下さい。
 ひらがなもしくはカタカナだけで答えて下さい。二文字以上の一般名詞で答えて下さい。"""
