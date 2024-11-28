@@ -45,7 +45,7 @@ class Shiritori(list):
         if not self._is_noun(w):
             raise NotNounException()
         if not self._is_connected(w):
-            raise
+            raise UnconnectedException()
         return True
 
     def _is_noun(self, w):
