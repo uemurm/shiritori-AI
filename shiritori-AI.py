@@ -1,6 +1,7 @@
 import google.generativeai as genai
 import MeCab
 import argparse
+import pykakasi
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--debug", help="print debug output", action="store_true")
@@ -59,7 +60,15 @@ class Shiritori(list):
     def _is_connected(self, w):
         if len(self) <= 1:
             return True
-        return self[-1] == w[0]
+
+        last_word = self[-1]
+        return self._to_lower(last_word[-1]) == self._to_lower(w[0])
+
+    def _to_lower(self, w):
+        # Convert Japanese characters to Hiragana characters.
+        kakasi = pykakasi.kakasi()
+        return kakasi.convert(w)[0]["hira"]
+
 
 instruction = """あなたには、しりとりの相手役をお願いします。しりとりの答えだけを、単語ひとつで答えて下さい。
 ひらがなもしくはカタカナだけで答えて下さい。二文字以上の一般名詞で答えて下さい。"""
