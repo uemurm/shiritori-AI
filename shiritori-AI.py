@@ -34,12 +34,12 @@ class UnconnectedException(Exception):
 
 
 class Shiritori(list):
-    def __init__(self, initial_word):
-        self.add(initial_word)
+    def __init__(self, word):
+        self.add(word)
 
-    def add(self, w):
-        if self._is_legit(w):
-            self.append(w)
+    def add(self, word):
+        if self.__is_legit(word):
+            self.append(word)
 
         if args.debug:
             print(f"DEBUG: {self=}")
@@ -50,54 +50,54 @@ class Shiritori(list):
 
         return self[-1]
 
-    def _is_legit(self, w):
-        if len(w) < 2:
+    def __is_legit(self, word):
+        if len(word) < 2:
             raise LessThanTwoLettersException()
-        if not self._is_noun(w):
+        if not self.__is_noun(word):
             raise NotNounException()
-        if not self._is_connected(w):
-            raise UnconnectedException(w, self.__last_word())
+        if not self.__is_connected(word):
+            raise UnconnectedException(word, self.__last_word())
         return True
 
-    def _is_noun(self, w):
-        node = mecab.parseToNode(w)
+    def __is_noun(self, word):
+        node = mecab.parseToNode(word)
         while node:
             if node.feature.split(",")[0] == "名詞":
                 return True
             node = node.next
         return False
 
-    def _is_connected(self, w):
+    def __is_connected(self, word):
         if len(self) <= 1:
             return True
 
-        return self._to_lower(self.__last_word()[-1]) == self._to_lower(w[0])
+        return self.__to_lower(self.__last_word()[-1]) == self.__to_lower(word[0])
 
-    def _to_lower(self, w):
+    def __to_lower(self, word):
         # Convert Japanese characters to Hiragana characters.
         kakasi = pykakasi.kakasi()
-        return kakasi.convert(w)[0]["hira"]
+        return kakasi.convert(word)[0]["hira"]
 
 
 instruction = """あなたには、しりとりの相手役をお願いします。しりとりの答えだけを、単語ひとつで答えて下さい。
 ひらがなもしくはカタカナだけで答えて下さい。二文字以上の一般名詞で答えて下さい。"""
-word = "しりとり"
-prompt = instruction + word
+initial_word = "しりとり"
+prompt = instruction + initial_word
 
 model = genai.GenerativeModel("gemini-1.5-flash")
-shiritori = Shiritori(word)
+shiritori = Shiritori(initial_word)
 
 while True:
     print(shiritori)
     response = model.generate_content(prompt)
-    word = response.text.rstrip()
+    returned_word = response.text.rstrip()
     if args.debug:
-        print(f"DEBUG: {word=}")
+        print(f"DEBUG: {returned_word=}")
     try:
-        shiritori.add(word)
+        shiritori.add(returned_word)
     except LessThanTwoLettersException:
         prompt = "二文字以上の単語だけで答えてください。"
     except NotNounException:
         prompt = "答えが一般名詞ではありません。"
     else:
-        prompt = instruction + word
+        prompt = instruction + returned_word
