@@ -25,8 +25,12 @@ class LessThanTwoLettersException(Exception):
 
 
 class UnconnectedException(Exception):
+    def __init__(self, word, last):
+        self.word = word
+        self.last = last
+
     def __str__(self):
-        return "Head of the word doesn't match with the tail of the previous word"
+        return f"Tail of '{self.last}' doesn't match with head of '{self.word}'"
 
 
 class Shiritori(list):
@@ -40,13 +44,19 @@ class Shiritori(list):
         if args.debug:
             print(f"DEBUG: {self=}")
 
+    def __last_word(self):
+        if len(self) == 0:
+            return None
+
+        return self[-1]
+
     def _is_legit(self, w):
         if len(w) < 2:
             raise LessThanTwoLettersException()
         if not self._is_noun(w):
             raise NotNounException()
         if not self._is_connected(w):
-            raise UnconnectedException()
+            raise UnconnectedException(w, self.__last_word())
         return True
 
     def _is_noun(self, w):
@@ -61,8 +71,7 @@ class Shiritori(list):
         if len(self) <= 1:
             return True
 
-        last_word = self[-1]
-        return self._to_lower(last_word[-1]) == self._to_lower(w[0])
+        return self._to_lower(self.__last_word()[-1]) == self._to_lower(w[0])
 
     def _to_lower(self, w):
         # Convert Japanese characters to Hiragana characters.
