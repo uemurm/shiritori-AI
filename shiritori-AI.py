@@ -26,11 +26,11 @@ class LessThanTwoLettersException(Exception):
 
 class UnconnectedException(Exception):
     def __init__(self, word, last):
-        self.word = word
-        self.last = last
+        self.new_word = word
+        self.last_word = last
 
     def __str__(self):
-        return f"Tail of '{self.last}' doesn't match with head of '{self.word}'"
+        return f"'{self.last_word}' の最後の文字と '{self.new_word}' の最初の文字が一致しません。"
 
 
 class Shiritori(list):
@@ -40,9 +40,6 @@ class Shiritori(list):
     def add(self, word):
         if self.__is_legit(word):
             self.append(word)
-
-        if args.debug:
-            print(f"DEBUG: {self=}")
 
     def __last_word(self):
         if len(self) == 0:
@@ -99,5 +96,10 @@ while True:
         prompt = "二文字以上の単語だけで答えてください。"
     except NotNounException:
         prompt = "答えが一般名詞ではありません。"
+    except UnconnectedException as e:
+        prompt = str(e) + f"しりとりのルールに則って、改めて{e.last_word[-1]}で始まる単語のみを答えてください。"
     else:
         prompt = instruction + returned_word
+    finally:
+        if args.debug:
+            print(prompt)
